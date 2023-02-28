@@ -7,6 +7,7 @@ expression data.
 Author: Kenneth Schackart <schackartk1@gmail.com>
 """
 
+import random
 from functools import partial
 
 
@@ -86,3 +87,47 @@ def test_calc_adjusted_fitnesses() -> None:
     adj_fitnesses = [5.0, 3.0, 1.0]
 
     assert calc_adjusted_fitnesses(fitnesses, h) == adj_fitnesses
+
+
+# -------------------------------------------------------------------------------------
+def crossover(parent_1: list[int], parent_2: list[int]) -> tuple(list[int]):
+    """
+    Conduct a crossover between to parent chromosomes, yeilding two offspring
+    chromosomes.
+
+    Arguments:
+    `parent_1`: Parent 1 chromosome
+    `parent_2`: Parent 2 chromosome
+    """
+
+    offspring_1 = []
+    offspring_2 = []
+
+    for par_1_gene, par_2_gene in zip(parent_1, parent_2):
+        if par_1_gene == par_2_gene:
+            offspring_1.append(par_1_gene)
+            offspring_2.append(par_2_gene)
+        else:
+            genes = [par_1_gene, par_2_gene]
+            offspring_1.append(random.choice(genes))
+            offspring_2.append(random.choice(genes))
+
+    return offspring_1, offspring_2
+
+
+# -------------------------------------------------------------------------------------
+def test_crossover() -> None:
+    """Test crossover()"""
+
+    # If parent chromosomes are identical, offspring inherit exactly
+    parent_1 = [1, 1, 1, 0, 0, 1]
+    parent_2 = [1, 1, 1, 0, 0, 1]
+
+    assert crossover(parent_1, parent_2) == ([1, 1, 1, 0, 0, 1], [1, 1, 1, 0, 0, 1])
+
+    # Crossover occurs for differing genes
+    parent_1 = [1, 0, 1, 0, 0, 0]
+    parent_2 = [1, 1, 0, 0, 1, 1]
+
+    random.seed(951)
+    assert crossover(parent_1, parent_2) == ([1, 0, 0, 0, 0, 0], [1, 1, 0, 0, 1, 0])

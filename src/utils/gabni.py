@@ -42,7 +42,7 @@ def test_calc_adjusted_fitness() -> None:
 
     # Highest score becomes h+1 times lowest score
     assert calc_adjusted_fitness(2.0, 2.0, 1.0, 2.0) == 3.0
-    assert calc_adjusted_fitness(5, 5, 3, 3) == 4.0
+    assert calc_adjusted_fitness(5.0, 5.0, 3.0, 3.0) == 4.0
 
 
 # -------------------------------------------------------------------------------------
@@ -71,7 +71,18 @@ def calc_adjusted_fitnesses(fitnesses: list[float], h: float):
 def test_calc_adjusted_fitnesses() -> None:
     """Test calc_adjusted_fitnesses()"""
 
+    # Max and min are properly adjusted
+    # Min becomes 1.0
+    # Max becomes h+1*min
+    h = 3.0
     fitnesses = [5.0, 3.0]
     adj_fitnesses = [4.0, 1.0]
 
-    assert calc_adjusted_fitnesses(fitnesses, 3.0) == adj_fitnesses
+    assert calc_adjusted_fitnesses(fitnesses, h) == adj_fitnesses
+
+    # Given evenly spaces input, output is evenly spaced
+    h = 4.0
+    fitnesses = [5.0, 4.0, 3.0]
+    adj_fitnesses = [5.0, 3.0, 1.0]
+
+    assert calc_adjusted_fitnesses(fitnesses, h) == adj_fitnesses
